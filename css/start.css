@@ -1,0 +1,275 @@
+/* ============================================================
+ * start.css — Press Start (Title) Screen
+ * ============================================================
+ * PURPOSE:
+ *   The "attract screen" shown after loading.
+ *   Contains: logo placeholder, floating mascot,
+ *   "PRESS START" arcade text, ambient particles.
+ *
+ * CUSTOMIZATION:
+ *   - CONFIG.startBackground replaces the gradient
+ *   - CONFIG.logo fills #logoPlaceholder
+ *   - CONFIG.mascotImage fills #floatingMascot
+ *   - Adjust animation timings for different feel
+ * ============================================================ */
+
+/* ---- START SCREEN ---- */
+.start-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 150;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  gap: 0;
+  overflow: hidden;
+
+  /* Transparent to show global background */
+  background: transparent;
+}
+
+.start-screen.active {
+  display: flex;
+}
+
+/* ---- LOGO PLACEHOLDER ----
+ * THIS IS WHERE YOUR EVENT LOGO GOES.
+ * Set CONFIG.logo to your logo image path.
+ * If empty, a text fallback renders automatically.
+ *
+ * TO ADD YOUR LOGO:
+ * 1. Place your logo PNG in /assets/images/
+ * 2. Set CONFIG.logo = "assets/images/your-logo.png" in config.js
+ */
+.logo-placeholder {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 10;
+  /* NO animation here — float animation lives on .logo-image below
+     so it doesn't conflict with the translateX(-50%) centering */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* When a logo image is loaded via CONFIG */
+.logo-image {
+  width: clamp(480px, 80vw, 1200px);
+  max-width: 92%;
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.5))
+          drop-shadow(0 0 80px rgba(255, 140, 0, 0.25))
+          drop-shadow(0 0 120px rgba(204, 68, 0, 0.15));
+  user-select: none;
+  pointer-events: none;
+  display: block;
+  /* Float animation here — only translateY, doesn't touch X centering */
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+/* Text fallback when no logo image is set */
+.logo-text-fallback {
+  font-size: clamp(20px, 6vw, 52px);
+  color: #FFD700;
+  letter-spacing: 4px;
+  text-shadow:
+    3px 3px 0 #FF8C00,
+    6px 6px 0 #CC4400,
+    0 0 30px rgba(255, 215, 0, 0.5),
+    0 0 60px rgba(255, 140, 0, 0.2);
+  text-align: center;
+  line-height: 1.4;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* ---- FLOATING MASCOT ----
+ * SET VIA CONFIG: CONFIG.mascotImage = "assets/images/mascot.png"
+ * The mascot floats, rotates subtly, and has a shadow.
+ */
+.floating-mascot {
+  position: absolute;
+  right: 8%;
+  bottom: 18%;
+  z-index: 8;
+  width: clamp(60px, 12vw, 120px);
+  height: auto;
+  image-rendering: pixelated;
+  display: none; /* shown via JS when config provides an image */
+  animation: mascotFloat 4s ease-in-out infinite, mascotRotate 6s ease-in-out infinite;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.5));
+  cursor: default;
+  user-select: none;
+}
+
+.floating-mascot:hover {
+  animation-play-state: paused;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.5)) brightness(1.2);
+}
+
+@keyframes mascotFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+@keyframes mascotRotate {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(3deg); }
+  75%      { transform: rotate(-3deg); }
+}
+
+/* ---- PRESS START TEXT ----
+ * The big blinking arcade "PRESS START" message.
+ * Pulses with glow, bloom, and opacity.
+ */
+.press-start-text {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-size: clamp(10px, 2.5vw, 18px);
+  color: #FF8C00;
+  letter-spacing: 5px;
+  cursor: pointer;
+  user-select: none;
+  padding: 12px 24px;
+  white-space: nowrap;
+  animation: pressStartBlink 0.9s step-end infinite;
+}
+
+/* Activated state (flash before transition) */
+.press-start-text.activated {
+  animation: none;
+  color: #fff;
+  text-shadow: 0 0 40px #FFD700, 0 0 80px #FF8C00, 0 0 120px #CC4400;
+}
+
+@keyframes pressStartBlink {
+  0%, 100% {
+    color: #FF8C00;
+    text-shadow: 0 0 8px rgba(255,140,0,0.5), 0 0 20px rgba(255,140,0,0.2);
+    opacity: 1;
+  }
+  50% {
+    color: #FFD700;
+    text-shadow:
+      0 0 15px rgba(255,215,0,0.9),
+      0 0 30px rgba(255,215,0,0.5),
+      0 0 60px rgba(255,140,0,0.3),
+      0 0 90px rgba(255,140,0,0.1);
+    opacity: 1;
+  }
+}
+
+/* ---- TAGLINE ---- */
+.start-tagline {
+  position: absolute;
+  bottom: 17%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(4px, 1vw, 7px);
+  color: rgba(0, 229, 255, 0.7);
+  letter-spacing: 6px;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
+  z-index: 10;
+  white-space: nowrap;
+}
+
+/* ---- PARTICLES ----
+ * Small glowing dots that drift upward.
+ * Spawned dynamically by JS.
+ */
+.start-particle {
+  position: absolute;
+  bottom: 0;
+  width: var(--p-size, 3px);
+  height: var(--p-size, 3px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  animation: particleRise var(--p-dur, 5s) linear forwards;
+}
+
+@keyframes particleRise {
+  0%   { opacity: 0; transform: translateY(0) translateX(0); }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.4; }
+  100% { opacity: 0; transform: translateY(-100%) translateX(var(--p-dx, 20px)); }
+}
+
+/* ---- TREES (background silhouettes) ---- */
+.start-trees {
+  position: absolute;
+  bottom: 28%;
+  left: 0;
+  right: 0;
+  height: 18%;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.start-trees::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -5%;
+  right: -5%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse 12% 100% at 8% 100%, #0a2818 0%, #0a2818 60%, transparent 61%),
+    radial-gradient(ellipse 10% 90% at 15% 100%, #071f12 0%, #071f12 60%, transparent 61%),
+    radial-gradient(ellipse 14% 100% at 28% 100%, #0a2818 0%, #0a2818 60%, transparent 61%),
+    radial-gradient(ellipse 12% 95% at 38% 100%, #0d3320 0%, #0d3320 60%, transparent 61%),
+    radial-gradient(ellipse 16% 100% at 52% 100%, #0a2818 0%, #0a2818 60%, transparent 61%),
+    radial-gradient(ellipse 12% 90% at 62% 100%, #071f12 0%, #071f12 60%, transparent 61%),
+    radial-gradient(ellipse 14% 95% at 75% 100%, #0d3320 0%, #0d3320 60%, transparent 61%),
+    radial-gradient(ellipse 12% 100% at 88% 100%, #0a2818 0%, #0a2818 60%, transparent 61%),
+    radial-gradient(ellipse 10% 85% at 95% 100%, #071f12 0%, #071f12 60%, transparent 61%);
+}
+
+/* Ground strip */
+.start-ground {
+  position: absolute;
+  bottom: 26%;
+  left: 0;
+  right: 0;
+  height: 3%;
+  background: linear-gradient(180deg, #0a2818, #0a1628);
+  z-index: 4;
+}
+
+/* Water reflection area */
+.start-water {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28%;
+  background: linear-gradient(180deg, #0a1628 0%, #0d1f3a 30%, #081422 100%);
+  z-index: 5;
+  overflow: hidden;
+}
+
+.start-water::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(100,180,255,0.03) 4px, rgba(100,180,255,0.03) 6px);
+  animation: waterRipple 3s ease-in-out infinite;
+}
+
+@keyframes waterRipple {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(2px); }
+}

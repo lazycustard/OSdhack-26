@@ -1,0 +1,73 @@
+/* ============================================================
+ * animations.css — Shared Keyframe Animations
+ * ============================================================
+ * PURPOSE:
+ *   Reusable keyframe animations used across multiple screens.
+ *   CRT-specific animations are in crt.css.
+ *   Screen-specific animations are in their own CSS files.
+ *
+ * CONTENTS:
+ *   - scanlineScroll: CRT scanline drift
+ *   - noiseShift: grain overlay movement
+ *   - ledPulse: power LED breathing
+ *   - Generic float, pulse, glow utilities
+ * ============================================================ */
+
+/* ---- SCANLINE SCROLL ---- */
+@keyframes scanlineScroll {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+/* ---- NOISE GRAIN SHIFT ---- */
+@keyframes noiseShift {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-5px, 3px); }
+  40%  { transform: translate(3px, -5px); }
+  60%  { transform: translate(-3px, 1px); }
+  80%  { transform: translate(5px, -3px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ---- POWER LED PULSE ---- */
+@keyframes ledPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #39ff14, 0 0 15px rgba(57,255,20,0.3); }
+  50%      { opacity: 0.65; box-shadow: 0 0 3px #39ff14, 0 0 8px rgba(57,255,20,0.15); }
+}
+
+/* ---- GENERIC FLOAT ---- */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+/* ---- GENERIC PULSE GLOW ---- */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+/* ---- FADE IN ---- */
+@keyframes fadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ---- FADE OUT ---- */
+@keyframes fadeOut {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---- SCALE UP BOUNCE ---- */
+@keyframes scaleBounce {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---- SPIN (for loading indicators) ---- */
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

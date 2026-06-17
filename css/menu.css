@@ -1,0 +1,324 @@
+/* ============================================================
+ * menu.css — Circular Navigation Menu
+ * ============================================================
+ * PURPOSE:
+ *   The main navigation hub. Items orbit in an elliptical ring
+ *   around a centered logo. Visible dashed orbit path connects
+ *   all nodes. Golden arcade-cabinet aesthetic.
+ *
+ * REFERENCE STYLE:
+ *   Night sky background, large center logo, golden circle icons
+ *   with pixel-art SVG symbols, dashed elliptical orbit line,
+ *   "PRESS START" below the logo.
+ *
+ * CUSTOMIZATION:
+ *   - --ring-rx / --ring-ry: ellipse horizontal/vertical radii
+ *   - --node-color: accent color per node (or global gold)
+ *   - CONFIG.menuItems[]: add/remove/reorder items
+ * ============================================================ */
+
+/* ---- MENU SCREEN ----
+ * Uses the night-sky + trees + water scene as its background.
+ * This matches the reference image aesthetic.
+ */
+.menu-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  overflow: hidden;
+
+  /* Transparent to show global background */
+  background: transparent;
+}
+
+.menu-screen.active {
+  display: flex;
+}
+
+/* ============================================================
+   RING CONTAINER + DASHED ORBIT PATH
+   ============================================================ */
+
+/* The ring container: zero-size element at center */
+.menu-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 15;
+
+  /* Elliptical radii (wider than tall like the reference) */
+  --ring-rx: min(42vw, 380px);
+  --ring-ry: min(35vh, 280px);
+}
+
+/* ---- DASHED ORBIT PATH ----
+ * A visible dashed elliptical line connecting all menu nodes.
+ * Matches the orange dashed orbit shown in the reference image.
+ */
+.menu-orbit-path {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 12;
+  pointer-events: none;
+}
+
+.menu-orbit-path ellipse {
+  fill: none;
+  stroke: rgba(255, 140, 0, 0.3);
+  stroke-width: 2;
+  stroke-dasharray: 8 6;
+  stroke-linecap: round;
+}
+
+/* ============================================================
+   MENU NODE — Golden arcade-style circle button
+   ============================================================ */
+.menu-node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+
+  /* Position via JS-set --cx and --cy multiplied by radii */
+  left: calc(var(--cx, 0) * var(--ring-rx));
+  top: calc(var(--cy, 0) * var(--ring-ry));
+  transform: translate(-50%, -50%);
+
+  /* Smooth orbit movement */
+  transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+              top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.3s ease,
+              filter 0.3s ease;
+
+  /* Default state */
+  opacity: 0.75;
+  filter: brightness(0.85);
+  z-index: 16;
+}
+
+/* ---- NODE ICON CIRCLE ----
+ * Round golden border with dark interior.
+ * Contains the SVG pixel-art icon.
+ */
+.menu-node-icon {
+  width: 68px;
+  height: 68px;
+  border: 3px solid #FF8C00;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 14, 26, 0.85);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 8px rgba(255, 140, 0, 0.2),
+    inset 0 0 12px rgba(255, 140, 0, 0.05);
+}
+
+/* Inner glow ring */
+.menu-node-icon::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 140, 0, 0.15);
+  pointer-events: none;
+}
+
+/* SVG icon inside the circle */
+.menu-node-icon svg {
+  width: 30px;
+  height: 30px;
+  fill: #FFD700;
+  filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.4));
+  transition: all 0.3s ease;
+}
+
+/* ---- NODE LABEL ----
+ * Text below each circle. Golden color.
+ */
+.menu-node-label {
+  font-size: 6px;
+  color: #FF8C00;
+  letter-spacing: 1px;
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 4px rgba(255, 140, 0, 0.3);
+}
+
+/* ============================================================
+   SELECTED STATE
+   The currently highlighted node glows brighter.
+   ============================================================ */
+.menu-node.selected {
+  opacity: 1;
+  filter: brightness(1);
+  z-index: 20;
+}
+
+.menu-node.selected .menu-node-icon {
+  width: 80px;
+  height: 80px;
+  border-color: #FFD700;
+  border-width: 3px;
+  background: rgba(10, 14, 26, 0.9);
+  box-shadow:
+    0 0 15px rgba(255, 215, 0, 0.35),
+    0 0 35px rgba(255, 140, 0, 0.15),
+    inset 0 0 15px rgba(255, 215, 0, 0.08);
+  animation: nodeGlow 2s ease-in-out infinite alternate;
+}
+
+.menu-node.selected .menu-node-icon svg {
+  width: 36px;
+  height: 36px;
+  fill: #FFD700;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
+}
+
+.menu-node.selected .menu-node-label {
+  font-size: 7px;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes nodeGlow {
+  0%   {
+    box-shadow: 0 0 12px rgba(255,215,0,0.25), 0 0 25px rgba(255,140,0,0.1), inset 0 0 10px rgba(255,215,0,0.05);
+  }
+  100% {
+    box-shadow: 0 0 22px rgba(255,215,0,0.45), 0 0 50px rgba(255,140,0,0.2), inset 0 0 18px rgba(255,215,0,0.08);
+  }
+}
+
+/* Hover on non-selected */
+.menu-node:not(.selected):hover {
+  opacity: 0.95;
+  filter: brightness(1);
+}
+
+.menu-node:not(.selected):hover .menu-node-icon {
+  border-color: #FFD700;
+  box-shadow:
+    0 0 12px rgba(255, 215, 0, 0.25),
+    inset 0 0 10px rgba(255, 215, 0, 0.05);
+}
+
+/* ---- ACTIVATING STATE (zoom when selecting) ---- */
+.menu-node.activating .menu-node-icon {
+  transform: scale(1.6);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================
+   CENTER CONTENT — Logo + "PRESS START"
+   ============================================================ */
+.menu-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 14;
+  text-align: center;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Small "presents" text above logo */
+.menu-center-presents {
+  font-size: 5px;
+  color: rgba(224, 208, 255, 0.45);
+  letter-spacing: 3px;
+  margin-bottom: 2px;
+}
+
+/* Center logo (image or text) */
+.menu-center-logo {
+  pointer-events: none;
+}
+
+.menu-center-logo-img {
+  width: clamp(120px, 28vw, 300px);
+  height: auto;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 12px rgba(255,215,0,0.25));
+}
+
+.menu-center-text {
+  font-size: clamp(16px, 4.5vw, 40px);
+  color: #FFD700;
+  letter-spacing: 3px;
+  text-shadow:
+    3px 3px 0 #FF8C00,
+    6px 6px 0 #CC4400,
+    0 0 20px rgba(255, 215, 0, 0.4),
+    0 0 50px rgba(255, 140, 0, 0.15);
+  line-height: 1.2;
+}
+
+/* "PRESS START" below the logo */
+.menu-press-start {
+  font-size: clamp(7px, 1.8vw, 12px);
+  color: #FF8C00;
+  letter-spacing: 4px;
+  margin-top: 10px;
+  animation: menuPressStartBlink 0.9s step-end infinite;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+@keyframes menuPressStartBlink {
+  0%, 100% {
+    color: #FF8C00;
+    text-shadow: 0 0 6px rgba(255,140,0,0.4);
+  }
+  50% {
+    color: #FFD700;
+    text-shadow: 0 0 12px rgba(255,215,0,0.7), 0 0 25px rgba(255,140,0,0.3);
+  }
+}
+
+/* Selected item name label (shows under PRESS START) */
+.menu-center-label {
+  font-size: clamp(5px, 1.2vw, 8px);
+  letter-spacing: 3px;
+  color: rgba(255, 215, 0, 0.6);
+  margin-top: 6px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-height: 14px;
+}
+
+/* ---- BOTTOM PROMPT ---- */
+.menu-select-prompt {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(4px, 0.9vw, 6px);
+  color: rgba(0, 229, 255, 0.5);
+  letter-spacing: 3px;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.2);
+  z-index: 15;
+  text-align: center;
+  white-space: nowrap;
+}
+
+

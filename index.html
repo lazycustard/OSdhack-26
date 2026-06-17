@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>OSDHACK'26 — Arcade Hackathon</title>
+  <meta name="description" content="OSDHACK'26 — a retro pizza-arcade hackathon experience. Navigate the CRT game menu to explore rules, tracks, prizes, and more!">
+
+  <!-- Pixel Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <!-- ============================================================
+       CSS FILES — Load Order Matters
+       ============================================================ -->
+  <link rel="stylesheet" href="css/animations.css">   <!-- Shared keyframes first -->
+  <link rel="stylesheet" href="css/crt.css">           <!-- CRT frame & effects -->
+  <link rel="stylesheet" href="css/loading.css">       <!-- Loading screen -->
+  <link rel="stylesheet" href="css/start.css">         <!-- Press Start screen -->
+  <link rel="stylesheet" href="css/menu.css">          <!-- Circular menu -->
+  <link rel="stylesheet" href="css/responsive.css">    <!-- Media queries last -->
+
+  <style>
+    /* ---- GLOBAL RESET & BASE ---- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: 'Press Start 2P', monospace;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      image-rendering: pixelated;
+    }
+
+    /* ---- SFX TOGGLE (outside CRT frame) ---- */
+    .sfx-toggle {
+      position: fixed;
+      bottom: 8px;
+      right: 8px;
+      z-index: 99999;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      background: rgba(10, 14, 26, 0.9);
+      border: 2px solid #FFD700;
+      color: #FFD700;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .sfx-toggle:hover {
+      background: #FFD700;
+      color: #000;
+    }
+    .sfx-toggle.muted {
+      border-color: rgba(224,208,255,0.3);
+      color: rgba(224,208,255,0.3);
+    }
+
+    /* ---- CUSTOM SCROLLBAR ---- */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0e1a; }
+    ::-webkit-scrollbar-thumb { background: #FF8C00; border: 1px solid #0a0e1a; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     SVG FILTER — Barrel Lens Distortion
+     Outward convex CRT curvature. feDisplacementMap + feGaussianBlur
+     creates a realistic barrel warp where the centre bulges forward.
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- Barrel distortion: displacement map is a soft radial gradient
+         that pushes pixels outward from the centre. -->
+    <filter id="barrel-distortion" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <!-- Step 1: create a radial gradient as the displacement map -->
+      <feFlood flood-color="rgb(128,128,128)" result="mid"/>
+      <feComposite in="mid" in2="SourceGraphic" operator="in" result="base"/>
+      <!-- Gentle blur for smooth warp -->
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.4" result="blurred"/>
+      <!-- Displacement: very small scale keeps it legible, just enough curve -->
+      <feDisplacementMap in="blurred" in2="SourceGraphic"
+        scale="6"
+        xChannelSelector="R"
+        yChannelSelector="G"
+        result="warped"/>
+      <!-- Composite back: use warped as primary, add slight glow -->
+      <feMerge>
+        <feMergeNode in="warped"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     SFX TOGGLE BUTTON (outside the CRT monitor)
+     ============================================================ -->
+<button class="sfx-toggle muted" id="sfxToggle" title="Toggle Sound">🔇 SFX</button>
+
+
+<!-- ============================================================
+     CRT MONITOR FRAME
+     All game screens live inside this curved arcade monitor.
+     ============================================================ -->
+<div class="crt-monitor">
+
+  <!-- Power LED and brand label on the bezel -->
+  <div class="crt-power-led"></div>
+  <div class="crt-brand">OSDHACK · ARCADE</div>
+
+  <!-- Inner screen (the glass area) -->
+  <div class="crt-screen" id="crtScreen">
+
+    <!-- ---- CRT EFFECT LAYERS ---- -->
+    <!-- These sit on top of all screen content -->
+    <div class="crt-scanlines"></div>
+    <div class="crt-vignette"></div>
+    <div class="crt-chromatic"></div>
+    <div class="crt-phosphor"></div>
+    <div class="crt-noise"></div>
+    <div class="crt-bloom"></div>
+    <div class="crt-flicker" id="crtFlicker"></div>
+
+    <!-- ============================================================
+         PERIODIC DISTORTION WAVES
+         Three independent animations at prime-ish intervals so they
+         never fully sync, giving an organic old-TV imperfection feel.
+
+         Wave 1 (crt-wave-h):     thin luminescent sweep band, 4.8s
+         Wave 2 (crt-wave-roll):  wide dark roll bar rising, 8.2s
+         Wave 3 (crt-wave-jitter): brief sync-loss skew, 12.5s
+         ============================================================ -->
+    <div class="crt-wave-h"></div>
+    <div class="crt-wave-roll"></div>
+    <div class="crt-wave-jitter"></div>
+
+    <!-- Boot overlay (covers screen during power-on sequence) -->
+    <div class="crt-boot-overlay" id="crtBootOverlay">
+      <div class="crt-boot-scanline" id="crtBootScanline"></div>
+    </div>
+
+    <!-- Glitch transition overlay (used between screens) -->
+    <div class="crt-glitch-overlay" id="crtGlitchOverlay"></div>
+
+    <!-- ===========================================================
+         GLOBAL BACKGROUND THEME
+         Sits behind all screens so the theme remains constant across
+         Loading, Start, and Menu states.
+         =========================================================== -->
+    <div class="global-theme-bg" style="
+      position: absolute; inset: 0; z-index: 50;
+      background: linear-gradient(180deg,
+        #050a18 0%, #0a1428 20%, #0d1b2a 40%,
+        #12263e 52%, #0d3320 60%, #0a2818 66%,
+        #0a1628 72%, #0d1f3a 85%, #081422 100%);
+      background-size: cover;
+      background-position: center;">
+      <!-- Background scenery -->
+      <div class="menu-trees"></div>
+      <div class="menu-ground"></div>
+      <div class="menu-water"></div>
+      <div class="menu-stars"></div>
+    </div>
+
+
+    <!-- ===========================================================
+         SCREEN 1 — LOADING SCREEN (BIOS Terminal Style)
+         First screen shown after CRT boot.
+         Green phosphor terminal with pizza-slice progress bar.
+         =========================================================== -->
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loading-content">
+
+        <!-- BIOS Header -->
+        <div class="bios-header">OSDHACK'26 BIOS v1.0.0</div>
+        <div class="bios-separator">─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─</div>
+
+        <!-- ---- BOOT CHECK LINES ----
+             BIOS-style status checks with [OK] tags.
+             Lines are injected by loading.js
+        -->
+        <div class="boot-checks" id="bootChecks">
+          <!-- Lines injected dynamically by loading.js -->
+        </div>
+
+        <!-- ---- LOADING SECTION ---- -->
+        <div class="loading-section">
+          <div class="loading-arcade-label">
+            <span class="pizza-icon">🍕</span>
+            LOADING ARCADE OS...
+            <span class="pizza-icon">🍕</span>
+          </div>
+
+          <!-- ---- PIZZA SLICE LOADING BAR ----
+               10 segments: filled = 🍕 emoji, empty = dark block.
+               Example: 🍕🍕🍕🍕🍕▪▪▪▪▪  63%
+          -->
+          <div class="pizza-bar-container">
+            <div class="pizza-bar-track" id="loadingBarTrack">
+              <div class="pizza-segment" data-i="0"></div>
+              <div class="pizza-segment" data-i="1"></div>
+              <div class="pizza-segment" data-i="2"></div>
+              <div class="pizza-segment" data-i="3"></div>
+              <div class="pizza-segment" data-i="4"></div>
+              <div class="pizza-segment" data-i="5"></div>
+              <div class="pizza-segment" data-i="6"></div>
+              <div class="pizza-segment" data-i="7"></div>
+              <div class="pizza-segment" data-i="8"></div>
+              <div class="pizza-segment" data-i="9"></div>
+            </div>
+            <div class="pizza-bar-percent" id="pizzaBarPercent">0%</div>
+          </div>
+        </div>
+
+        <!-- ---- CONSOLE OUTPUT ----
+             Scrolling boot messages: "> MOUNTING PIZZA DRIVE...."
+        -->
+        <div class="loading-console" id="loadingConsole"></div>
+
+        <!-- ---- PIZZA TIP BOX ----
+             "TODAY'S PIZZA TIP:" with rotating facts and mascot.
+             CUSTOMIZE:
+               - CONFIG.pizzaSprite: mascot image in the tip box
+               - CONFIG.pizzaFacts[]: tip messages (50+ recommended)
+        -->
+        <div class="pizza-tip-box">
+          <div class="pizza-tip-content">
+            <div class="pizza-tip-label">🍕 TODAY'S PIZZA TIP:</div>
+            <div class="pizza-tip-text" id="pizzaTipText">Initializing pizza knowledge...</div>
+          </div>
+          <!--
+            MASCOT IMAGE:
+            Set CONFIG.pizzaSprite = "assets/images/your-mascot.png"
+            to replace the emoji fallback below.
+          -->
+          <img id="tipMascotImg" class="pizza-tip-mascot" src="" alt="Mascot" style="display:none;" draggable="false">
+          <div class="pizza-tip-mascot-fallback" id="tipMascotFallback">🍕😎</div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="loading-footer">POWERED BY CAFFEINE & PIZZA <span class="heart">❤</span></div>
+    </div>
+
+
+    <!-- ===========================================================
+         SCREEN 2 — PRESS START (Title / Attract Screen)
+         Shown after loading completes.
+         =========================================================== -->
+    <div class="start-screen" id="startScreen">
+
+      <!-- ---- LOGO PLACEHOLDER ----
+           YOUR EVENT LOGO GOES HERE.
+           HOW TO ADD YOUR LOGO:
+           1. Place your logo PNG in /assets/images/
+           2. Open js/config.js
+           3. Set: logo: "assets/images/your-logo.png"
+           If left empty, a styled text fallback will render.
+      -->
+      <div class="logo-placeholder" id="logoPlaceholder">
+        <!-- Logo image or text fallback is injected here by start.js -->
+      </div>
+
+      <!-- Tagline -->
+      <div class="start-tagline" id="startTagline">CODE · BUILD · DEVOUR</div>
+
+      <!-- ---- PRESS START TEXT ----
+           The big blinking arcade text.
+           Triggers transition to the Main Menu.
+      -->
+      <div class="press-start-text" id="pressStartText">▸ PRESS START ◂</div>
+
+      <!-- ---- FLOATING MASCOT ----
+           HOW TO ADD YOUR MASCOT:
+           1. Place your mascot PNG in /assets/images/
+           2. Open js/config.js
+           3. Set: mascotImage: "assets/images/your-mascot.png"
+           The mascot will float, rotate subtly, and have a shadow.
+      -->
+      <img class="floating-mascot" id="floatingMascot"
+           src="" alt="Mascot" draggable="false">
+    </div>
+
+
+    <!-- ===========================================================
+         SCREEN 3 — MAIN MENU (Circular Navigation Hub)
+         The primary navigation screen.
+         =========================================================== -->
+    <div class="menu-screen" id="menuScreen">
+
+      <!-- ---- CENTER CONTENT (logo + label) ---- -->
+      <div class="menu-center">
+        <div class="menu-center-logo" id="menuCenterLogo">
+          <!-- Logo or text injected by menu.js -->
+        </div>
+        <div class="menu-center-label" id="menuCenterLabel">ABOUT</div>
+        <div class="menu-center-hint">▸ ENTER ◂</div>
+      </div>
+
+      <!-- ---- CIRCULAR RING CONTAINER ----
+           Menu nodes are built dynamically from CONFIG.menuItems by menu.js.
+           Each node is positioned using sin/cos trigonometry.
+      -->
+      <div class="menu-ring" id="menuRing">
+        <!-- Nodes injected by menu.js from CONFIG.menuItems -->
+      </div>
+
+      <!-- Select prompt -->
+      <div class="menu-select-prompt">USE ← → ARROWS · ENTER TO SELECT</div>
+
+    </div>
+
+  </div><!-- /crt-screen -->
+</div><!-- /crt-monitor -->
+
+
+<!-- ============================================================
+     JAVASCRIPT FILES — Load Order Matters
+     config.js and utils.js must load first (no dependencies).
+     app.js loads last (orchestrates everything).
+     ============================================================ -->
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/gamepad.js"></script>
+<script src="js/crt.js"></script>
+<script src="js/loading.js"></script>
+<script src="js/start.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
