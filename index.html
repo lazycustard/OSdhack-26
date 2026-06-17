@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="css/loading.css">       <!-- Loading screen -->
   <link rel="stylesheet" href="css/start.css">         <!-- Press Start screen -->
   <link rel="stylesheet" href="css/menu.css">          <!-- Circular menu -->
+  <link rel="stylesheet" href="css/pizza.css">         <!-- Pizza Easter Egg -->
   <link rel="stylesheet" href="css/responsive.css">    <!-- Media queries last -->
 
   <style>
@@ -305,9 +306,83 @@
 
       <!-- ---- CENTER CONTENT (logo + label) ---- -->
       <div class="menu-center">
-        <div class="menu-center-logo" id="menuCenterLogo">
-          <!-- Logo or text injected by menu.js -->
+        <!-- PIZZA GAME -->
+        <div id="pizzaEasterEgg">
+          <div id="pizza-wrap">
+            <div id="plate"></div>
+            <svg id="pizza-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+              <g class="slice-group" id="slice-0" data-idx="0">
+                <path class="slice-path" d="M200,200 L200,42 A158,158 0 0,1 337,121 Z" fill="#f5b942" stroke="#c8520a" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M200,42 A158,158 0 0,1 337,121" fill="none" stroke="#8b4513" stroke-width="22" stroke-linecap="round"/>
+                <path d="M200,200 L205,54 A148,148 0 0,1 327,126 Z" fill="#f5c842" opacity="0.9"/>
+                <circle cx="248" cy="110" r="18" fill="#c03008" opacity="0.7"/><circle cx="278" cy="145" r="13" fill="#c03008" opacity="0.6"/>
+                <circle cx="248" cy="110" r="14" fill="#8b1a0a"/><circle cx="248" cy="110" r="10" fill="#a02010"/>
+                <circle cx="278" cy="145" r="10" fill="#8b1a0a"/><circle cx="278" cy="145" r="7" fill="#a02010"/>
+                <ellipse cx="260" cy="130" rx="6" ry="10" fill="#2d8b2d" transform="rotate(-30 260 130)"/>
+                <path d="M220,90 Q240,70 260,85" fill="none" stroke="#f5e060" stroke-width="2.5" opacity="0.6"/>
+                <path d="M205,50 A155,155 0 0,1 330,123" fill="none" stroke="#6b3410" stroke-width="3" stroke-dasharray="6 8" opacity="0.4"/>
+              </g>
+              <g class="slice-group" id="slice-1" data-idx="1">
+                <path class="slice-path" d="M200,200 L337,121 A158,158 0 0,1 337,279 Z" fill="#f5b942" stroke="#c8520a" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M337,121 A158,158 0 0,1 337,279" fill="none" stroke="#8b4513" stroke-width="22" stroke-linecap="round"/>
+                <path d="M200,200 L327,126 A148,148 0 0,1 327,274 Z" fill="#f5c842" opacity="0.9"/>
+                <circle cx="310" cy="175" r="20" fill="#c03008" opacity="0.7"/><circle cx="310" cy="240" r="15" fill="#c03008" opacity="0.6"/>
+                <circle cx="310" cy="175" r="16" fill="#8b1a0a"/><circle cx="310" cy="175" r="11" fill="#a02010"/>
+                <circle cx="310" cy="240" r="11" fill="#8b1a0a"/><circle cx="310" cy="240" r="7.5" fill="#a02010"/>
+                <ellipse cx="295" cy="210" rx="6" ry="10" fill="#2d8b2d" transform="rotate(20 295 210)"/>
+                <path d="M320,150 Q340,170 325,185" fill="none" stroke="#f5e060" stroke-width="2.5" opacity="0.6"/>
+                <path d="M333,126 A148,148 0 0,1 333,274" fill="none" stroke="#6b3410" stroke-width="3" stroke-dasharray="6 8" opacity="0.4"/>
+              </g>
+              <g class="slice-group" id="slice-2" data-idx="2">
+                <path class="slice-path" d="M200,200 L337,279 A158,158 0 0,1 200,358 Z" fill="#f5b942" stroke="#c8520a" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M337,279 A158,158 0 0,1 200,358" fill="none" stroke="#8b4513" stroke-width="22" stroke-linecap="round"/>
+                <path d="M200,200 L327,274 A148,148 0 0,1 200,348 Z" fill="#f5c842" opacity="0.9"/>
+                <circle cx="285" cy="310" r="18" fill="#c03008" opacity="0.7"/><circle cx="248" cy="330" r="14" fill="#c03008" opacity="0.6"/>
+                <circle cx="285" cy="310" r="14" fill="#8b1a0a"/><circle cx="285" cy="310" r="10" fill="#a02010"/>
+                <circle cx="248" cy="330" r="10" fill="#8b1a0a"/><circle cx="248" cy="330" r="7" fill="#a02010"/>
+                <ellipse cx="265" cy="295" rx="6" ry="11" fill="#2d8b2d" transform="rotate(45 265 295)"/>
+                <path d="M310,280 Q300,310 275,305" fill="none" stroke="#f5e060" stroke-width="2.5" opacity="0.6"/>
+                <path d="M333,277 A148,148 0 0,1 200,348" fill="none" stroke="#6b3410" stroke-width="3" stroke-dasharray="6 8" opacity="0.4"/>
+              </g>
+              <g class="slice-group" id="slice-3" data-idx="3">
+                <path class="slice-path" d="M200,200 L200,358 A158,158 0 0,1 63,279 Z" fill="#f5b942" stroke="#c8520a" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M200,358 A158,158 0 0,1 63,279" fill="none" stroke="#8b4513" stroke-width="22" stroke-linecap="round"/>
+                <path d="M200,200 L200,348 A148,148 0 0,1 73,274 Z" fill="#f5c842" opacity="0.9"/>
+                <circle cx="152" cy="330" r="18" fill="#c03008" opacity="0.7"/><circle cx="115" cy="310" r="14" fill="#c03008" opacity="0.6"/>
+                <circle cx="152" cy="330" r="14" fill="#8b1a0a"/><circle cx="152" cy="330" r="10" fill="#a02010"/>
+                <circle cx="115" cy="310" r="10" fill="#8b1a0a"/><circle cx="115" cy="310" r="7" fill="#a02010"/>
+                <ellipse cx="135" cy="295" rx="6" ry="11" fill="#2d8b2d" transform="rotate(-45 135 295)"/>
+                <path d="M90,280 Q100,310 125,305" fill="none" stroke="#f5e060" stroke-width="2.5" opacity="0.6"/>
+                <path d="M200,348 A148,148 0 0,1 73,274" fill="none" stroke="#6b3410" stroke-width="3" stroke-dasharray="6 8" opacity="0.4"/>
+              </g>
+              <g class="slice-group" id="slice-4" data-idx="4">
+                <path class="slice-path" d="M200,200 L63,279 A158,158 0 0,1 63,121 Z" fill="#f5b942" stroke="#c8520a" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M63,279 A158,158 0 0,1 63,121" fill="none" stroke="#8b4513" stroke-width="22" stroke-linecap="round"/>
+                <path d="M200,200 L73,274 A148,148 0 0,1 73,126 Z" fill="#f5c842" opacity="0.9"/>
+                <circle cx="90" cy="240" r="20" fill="#c03008" opacity="0.7"/><circle cx="90" cy="175" r="15" fill="#c03008" opacity="0.6"/>
+                <circle cx="90" cy="240" r="16" fill="#8b1a0a"/><circle cx="90" cy="240" r="11" fill="#a02010"/>
+                <circle cx="90" cy="175" r="11" fill="#8b1a0a"/><circle cx="90" cy="175" r="7.5" fill="#a02010"/>
+                <ellipse cx="105" cy="210" rx="6" ry="10" fill="#2d8b2d" transform="rotate(-20 105 210)"/>
+                <path d="M80,150 Q60,170 75,185" fill="none" stroke="#f5e060" stroke-width="2.5" opacity="0.6"/>
+                <path d="M67,274 A148,148 0 0,1 67,126" fill="none" stroke="#6b3410" stroke-width="3" stroke-dasharray="6 8" opacity="0.4"/>
+              </g>
+              <g class="slice-group" id="slice-5" data-idx="5">
+                <path class="slice-path" d="M200,200 L63,121 A158,158 0 0,1 200,42 Z" fill="#f5b942" stroke="#c8520a" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M63,121 A158,158 0 0,1 200,42" fill="none" stroke="#8b4513" stroke-width="22" stroke-linecap="round"/>
+                <path d="M200,200 L73,126 A148,148 0 0,1 200,52 Z" fill="#f5c842" opacity="0.9"/>
+                <circle cx="122" cy="110" r="18" fill="#c03008" opacity="0.7"/><circle cx="155" cy="80" r="13" fill="#c03008" opacity="0.6"/>
+                <circle cx="122" cy="110" r="14" fill="#8b1a0a"/><circle cx="122" cy="110" r="10" fill="#a02010"/>
+                <circle cx="155" cy="80" r="10" fill="#8b1a0a"/><circle cx="155" cy="80" r="7" fill="#a02010"/>
+                <ellipse cx="140" cy="130" rx="6" ry="10" fill="#2d8b2d" transform="rotate(30 140 130)"/>
+                <path d="M100,90 Q120,70 140,85" fill="none" stroke="#f5e060" stroke-width="2.5" opacity="0.6"/>
+                <path d="M67,126 A148,148 0 0,1 200,52" fill="none" stroke="#6b3410" stroke-width="3" stroke-dasharray="6 8" opacity="0.4"/>
+              </g>
+              <circle cx="200" cy="200" r="10" fill="#c8520a" stroke="#8b3010" stroke-width="2"/>
+              <circle cx="200" cy="200" r="5" fill="#f5b942"/>
+            </svg>
+          </div>
         </div>
+
         <div class="menu-center-label" id="menuCenterLabel">ABOUT</div>
         <div class="menu-center-hint">▸ ENTER ◂</div>
       </div>
@@ -316,12 +391,19 @@
            Menu nodes are built dynamically from CONFIG.menuItems by menu.js.
            Each node is positioned using sin/cos trigonometry.
       -->
+      <div id="menuOrbitPath" class="menu-orbit-path"></div>
       <div class="menu-ring" id="menuRing">
         <!-- Nodes injected by menu.js from CONFIG.menuItems -->
       </div>
 
       <!-- Select prompt -->
       <div class="menu-select-prompt">USE ← → ARROWS · ENTER TO SELECT</div>
+
+      <!-- Burp overlay -->
+      <div id="burp-overlay">
+        <div id="burp-text">BURRRP!</div>
+        <div id="burp-sub">★ all pizza consumed ★</div>
+      </div>
 
     </div>
 
@@ -342,6 +424,7 @@
 <script src="js/loading.js"></script>
 <script src="js/start.js"></script>
 <script src="js/menu.js"></script>
+<script src="js/pizza.js"></script>
 <script src="js/app.js"></script>
 
 </body>

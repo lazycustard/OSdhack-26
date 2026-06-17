@@ -107,14 +107,14 @@ const CONFIG = {
    * The circle automatically distributes them evenly.
    */
   menuItems: [
-    { id: 'about', label: 'ABOUT', icon: '📖', color: '#00e5ff' },
+    { id: 'about', label: 'ABOUT', icon: '📖', color: '#39ff14' },
     { id: 'tracks', label: 'TRACKS', icon: '🏁', color: '#39ff14' },
-    { id: 'rules', label: 'RULES', icon: '📋', color: '#e040fb' },
-    { id: 'schedule', label: 'SCHEDULE', icon: '📅', color: '#FFD700' },
-    { id: 'prizes', label: 'PRIZES', icon: '🏆', color: '#ff6e40' },
-    { id: 'sponsors', label: 'SPONSORS', icon: '💎', color: '#b388ff' },
-    { id: 'faq', label: 'FAQ', icon: '❓', color: '#ff6e40' },
-    { id: 'team', label: 'TEAM', icon: '👥', color: '#00e5ff' },
+    { id: 'rules', label: 'RULES', icon: '📋', color: '#39ff14' },
+    { id: 'sponsole', label: 'SPONSOLE', icon: '📅', color: '#39ff14' },
+    { id: 'prizes', label: 'PRIZES', icon: '🏆', color: '#39ff14' },
+    { id: 'team', label: 'TEAM', icon: '👥', color: '#39ff14' },
+    { id: 'topics', label: 'TOPICS', icon: '💡', color: '#39ff14' },
+    { id: 'faq', label: 'FAQ', icon: '❓', color: '#39ff14' },
   ],
 
   /* ---- LOADING SCREEN FACTS ----

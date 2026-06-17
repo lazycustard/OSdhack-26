@@ -62,14 +62,9 @@ const MenuScreen = (() => {
     // Apply config background
     Utils.setBackground(screen, CONFIG.menuBackground);
 
-    // Set center logo
-    const centerLogo = $('menuCenterLogo');
-    if (centerLogo) {
-      if (CONFIG.logo) {
-        centerLogo.innerHTML = `<img src="${CONFIG.logo}" alt="${CONFIG.title}" class="menu-center-logo-img" draggable="false">`;
-      } else {
-        centerLogo.innerHTML = `<div class="menu-center-text">${CONFIG.title}</div>`;
-      }
+    // Initialize the pizza game instead of the logo
+    if (window.PizzaGame) {
+      PizzaGame.init();
     }
 
     // Build menu nodes + orbit path
@@ -92,22 +87,10 @@ const MenuScreen = (() => {
     const container = $('menuOrbitPath');
     if (!container) return;
 
-    // Get the actual radius values from CSS
-    const ring = $('menuRing');
-    if (!ring) return;
-    const style = getComputedStyle(ring);
-    const rx = parseFloat(style.getPropertyValue('--ring-rx')) || 300;
-    const ry = parseFloat(style.getPropertyValue('--ring-ry')) || 240;
-
-    // Create SVG with the ellipse
-    const svgW = rx * 2 + 20;
-    const svgH = ry * 2 + 20;
     container.innerHTML = `
-      <svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}">
-        <ellipse cx="${svgW/2}" cy="${svgH/2}" rx="${rx}" ry="${ry}"/>
+      <svg width="100%" height="100%" style="overflow: visible;">
+        <ellipse cx="50%" cy="50%" rx="50%" ry="50%"/>
       </svg>`;
-    container.style.width = svgW + 'px';
-    container.style.height = svgH + 'px';
   }
 
   /* ---- BUILD STARS ---- */
@@ -144,12 +127,15 @@ const MenuScreen = (() => {
 
       // Icon circle
       const iconWrap = Utils.createElement('div', 'menu-node-icon');
-      // Use SVG icon if available, otherwise emoji fallback
+      // User will put PNGs later. Leaving icon empty.
+      /*
       if (SVG_ICONS[item.id]) {
         iconWrap.innerHTML = SVG_ICONS[item.id];
       } else {
         iconWrap.textContent = item.icon || '⭐';
       }
+      */
+      iconWrap.innerHTML = '';
       node.appendChild(iconWrap);
 
       // Label
