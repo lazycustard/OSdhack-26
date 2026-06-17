@@ -1,28 +1,3 @@
-/* ============================================================
- * crt.css — CRT Monitor Frame & Effects
- * ============================================================
- * PURPOSE:
- *   The physical CRT arcade monitor. All content lives inside.
- *   Creates: rounded bezel, glass curvature, scanlines, vignette,
- *   chromatic aberration, noise grain, phosphor glow, flicker,
- *   barrel distortion, and power-on boot sequence.
- *
- * CUSTOMIZATION:
- *   - Adjust border-radius for rounder/sharper corners
- *   - Adjust box-shadow colors for bezel tint
- *   - Tweak opacity values for subtler/stronger effects
- * ============================================================ */
-
-/* ============================================================
-   SVG FILTER — True Barrel Distortion
-   Applied to the screen content for authentic CRT curvature.
-   The <svg> is defined in index.html as a zero-size element.
-   ============================================================ */
-
-/* ---- MONITOR OUTER SHELL ----
- * The thick arcade cabinet bezel.
- * This is the outermost container.
- */
 .crt-monitor {
   position: relative;
   width: 94vw;
@@ -57,13 +32,11 @@
   position: absolute;
   inset: -3px;
   border-radius: 30px / 28px;
-  background: linear-gradient(
-    155deg,
-    rgba(255,255,255,0.04) 0%,
-    transparent 25%,
-    transparent 75%,
-    rgba(255,255,255,0.02) 100%
-  );
+  background: linear-gradient(155deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      transparent 25%,
+      transparent 75%,
+      rgba(255, 255, 255, 0.02) 100%);
   pointer-events: none;
   z-index: 9999;
 }
@@ -100,12 +73,12 @@
   background:
     /* Primary glass dome shine — upper center bright spot */
     radial-gradient(ellipse 55% 35% at 50% 22%,
-      rgba(255,255,255,0.035) 0%,
-      rgba(255,255,255,0.012) 40%,
+      rgba(255, 255, 255, 0.035) 0%,
+      rgba(255, 255, 255, 0.012) 40%,
       transparent 70%),
     /* Secondary soft glow bottom-left */
     radial-gradient(ellipse 40% 25% at 18% 80%,
-      rgba(200,230,255,0.012) 0%,
+      rgba(200, 230, 255, 0.012) 0%,
       transparent 70%),
     /* Corner darkening — outward-curved screens are dark at corners */
     radial-gradient(ellipse 78% 72% at 50% 50%,
@@ -129,8 +102,8 @@
     inset 0 0 35px rgba(0, 0, 0, 0.5),
     inset 0 0 8px rgba(0, 0, 0, 0.7),
     /* Subtle edge highlight (light catching the lip of the screen) */
-    inset 0 1px 0 rgba(255,255,255,0.04),
-    inset 0 -1px 0 rgba(255,255,255,0.02);
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.02);
   pointer-events: none;
   z-index: 9989;
 }
@@ -142,13 +115,11 @@
 .crt-scanlines {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.075) 2px,
-    rgba(0, 0, 0, 0.075) 4px
-  );
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.075) 2px,
+      rgba(0, 0, 0, 0.075) 4px);
   pointer-events: none;
   z-index: 9000;
   animation: scanlineScroll 12s linear infinite;
@@ -161,12 +132,10 @@
 .crt-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 76% 72% at center,
-    transparent 35%,
-    rgba(0, 0, 0, 0.38) 72%,
-    rgba(0, 0, 0, 0.65) 100%
-  );
+  background: radial-gradient(ellipse 76% 72% at center,
+      transparent 35%,
+      rgba(0, 0, 0, 0.38) 72%,
+      rgba(0, 0, 0, 0.65) 100%);
   pointer-events: none;
   z-index: 8999;
 }
@@ -195,49 +164,77 @@
 /* WAVE 1 — Horizontal sweep band */
 .crt-wave-h {
   position: absolute;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   height: 4px;
   pointer-events: none;
   z-index: 9003;
   background: linear-gradient(180deg,
-    transparent 0%,
-    rgba(200, 255, 200, 0.06) 30%,
-    rgba(200, 255, 200, 0.10) 50%,
-    rgba(200, 255, 200, 0.06) 70%,
-    transparent 100%);
-  box-shadow: 0 0 8px rgba(200,255,200,0.08);
+      transparent 0%,
+      rgba(200, 255, 200, 0.06) 30%,
+      rgba(200, 255, 200, 0.10) 50%,
+      rgba(200, 255, 200, 0.06) 70%,
+      transparent 100%);
+  box-shadow: 0 0 8px rgba(200, 255, 200, 0.08);
   animation: waveH 4.8s linear infinite;
 }
 
 @keyframes waveH {
-  0%    { top: -10px; opacity: 0; }
-  3%    { opacity: 1; }
-  90%   { opacity: 0.5; }
-  100%  { top: calc(100% + 10px); opacity: 0; }
+  0% {
+    top: -10px;
+    opacity: 0;
+  }
+
+  3% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 0.5;
+  }
+
+  100% {
+    top: calc(100% + 10px);
+    opacity: 0;
+  }
 }
 
 /* WAVE 2 — Roll bar (dark, wider, moves upward) */
 .crt-wave-roll {
   position: absolute;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   height: 28px;
   pointer-events: none;
   z-index: 9002;
   background: linear-gradient(180deg,
-    transparent 0%,
-    rgba(0, 0, 0, 0.20) 20%,
-    rgba(0, 0, 0, 0.35) 50%,
-    rgba(0, 0, 0, 0.20) 80%,
-    transparent 100%);
+      transparent 0%,
+      rgba(0, 0, 0, 0.20) 20%,
+      rgba(0, 0, 0, 0.35) 50%,
+      rgba(0, 0, 0, 0.20) 80%,
+      transparent 100%);
   animation: waveRoll 8.2s linear infinite;
   animation-delay: -3.1s;
 }
 
 @keyframes waveRoll {
-  0%    { bottom: -40px; opacity: 0; }
-  5%    { opacity: 1; }
-  88%   { opacity: 0.6; }
-  100%  { bottom: calc(100% + 40px); opacity: 0; }
+  0% {
+    bottom: -40px;
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 0.6;
+  }
+
+  100% {
+    bottom: calc(100% + 40px);
+    opacity: 0;
+  }
 }
 
 /* WAVE 3 — Sync jitter (whole screen skew, brief) */
@@ -253,14 +250,40 @@
 }
 
 @keyframes waveJitter {
+
   /* 94.4% of the time: invisible */
-  0%, 94.4% { opacity: 0; transform: none; }
+  0%,
+  94.4% {
+    opacity: 0;
+    transform: none;
+  }
+
   /* Brief skew pulse */
-  94.5%  { opacity: 1; transform: skewX(0.4deg) translateX(2px); background: rgba(255,255,255,0.015); }
-  94.7%  { opacity: 1; transform: skewX(-0.3deg) translateX(-3px); }
-  94.9%  { opacity: 1; transform: skewX(0.2deg) translateX(1px); }
-  95.1%  { opacity: 0; transform: none; }
-  100%   { opacity: 0; transform: none; }
+  94.5% {
+    opacity: 1;
+    transform: skewX(0.4deg) translateX(2px);
+    background: rgba(255, 255, 255, 0.015);
+  }
+
+  94.7% {
+    opacity: 1;
+    transform: skewX(-0.3deg) translateX(-3px);
+  }
+
+  94.9% {
+    opacity: 1;
+    transform: skewX(0.2deg) translateX(1px);
+  }
+
+  95.1% {
+    opacity: 0;
+    transform: none;
+  }
+
+  100% {
+    opacity: 0;
+    transform: none;
+  }
 }
 
 
@@ -282,11 +305,10 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg,
-    rgba(255, 30, 30, 0.02) 0%,
-    transparent 5%,
-    transparent 95%,
-    rgba(255, 30, 30, 0.025) 100%
-  );
+      rgba(255, 30, 30, 0.02) 0%,
+      transparent 5%,
+      transparent 95%,
+      rgba(255, 30, 30, 0.025) 100%);
   transform: translateX(-1.5px);
 }
 
@@ -296,11 +318,10 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg,
-    rgba(30, 80, 255, 0.025) 0%,
-    transparent 5%,
-    transparent 95%,
-    rgba(30, 80, 255, 0.02) 100%
-  );
+      rgba(30, 80, 255, 0.025) 0%,
+      transparent 5%,
+      transparent 95%,
+      rgba(30, 80, 255, 0.02) 100%);
   transform: translateX(1.5px);
 }
 
@@ -310,11 +331,9 @@
 .crt-phosphor {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 60% 50% at 50% 50%,
-    rgba(100, 255, 180, 0.008) 0%,
-    transparent 60%
-  );
+  background: radial-gradient(ellipse 60% 50% at 50% 50%,
+      rgba(100, 255, 180, 0.008) 0%,
+      transparent 60%);
   pointer-events: none;
   z-index: 8998;
   mix-blend-mode: screen;
@@ -385,11 +404,25 @@
 }
 
 @keyframes bootFlicker {
-  0%   { background: #000; }
-  30%  { background: rgba(200,255,200, 0.08); }
-  50%  { background: #000; }
-  70%  { background: rgba(200,255,200, 0.04); }
-  100% { background: rgba(255,255,255, 0.02); }
+  0% {
+    background: #000;
+  }
+
+  30% {
+    background: rgba(200, 255, 200, 0.08);
+  }
+
+  50% {
+    background: #000;
+  }
+
+  70% {
+    background: rgba(200, 255, 200, 0.04);
+  }
+
+  100% {
+    background: rgba(255, 255, 255, 0.02);
+  }
 }
 
 /* Phase: Horizontal scanline expanding from center */
@@ -407,8 +440,8 @@
   box-shadow: 0 0 15px rgba(200, 255, 200, 0.5), 0 0 40px rgba(200, 255, 200, 0.2);
   transform: scaleY(1);
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.3s;
+    height 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s;
   z-index: 1;
 }
 
@@ -425,11 +458,25 @@
 }
 
 @keyframes bootStatic {
-  0%   { background: rgba(200,200,200,0.05); }
-  25%  { background: rgba(100,100,100,0.08); }
-  50%  { background: rgba(200,200,200,0.03); }
-  75%  { background: rgba(150,150,150,0.06); }
-  100% { background: rgba(200,200,200,0.04); }
+  0% {
+    background: rgba(200, 200, 200, 0.05);
+  }
+
+  25% {
+    background: rgba(100, 100, 100, 0.08);
+  }
+
+  50% {
+    background: rgba(200, 200, 200, 0.03);
+  }
+
+  75% {
+    background: rgba(150, 150, 150, 0.06);
+  }
+
+  100% {
+    background: rgba(200, 200, 200, 0.04);
+  }
 }
 
 /* Phase: Fade to content */
@@ -438,8 +485,15 @@
 }
 
 @keyframes bootFadeIn {
-  0%   { opacity: 1; background: rgba(0,0,0,0.6); }
-  100% { opacity: 0; background: transparent; }
+  0% {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  100% {
+    opacity: 0;
+    background: transparent;
+  }
 }
 
 /* ---- GLITCH TRANSITION OVERLAY ----
@@ -459,13 +513,44 @@
 }
 
 @keyframes glitchFlash {
-  0%   { opacity: 1; background: rgba(0,0,0,0.9); }
-  15%  { opacity: 1; background: rgba(200,255,200,0.06); transform: translateX(3px); }
-  30%  { opacity: 1; background: rgba(0,0,0,0.7); transform: translateX(-2px) skewX(1deg); }
-  45%  { opacity: 1; background: rgba(255,200,200,0.04); transform: translateX(1px); }
-  60%  { opacity: 1; background: rgba(0,0,0,0.5); transform: none; }
-  80%  { opacity: 0.5; background: rgba(0,0,0,0.2); }
-  100% { opacity: 0; transform: none; }
+  0% {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  15% {
+    opacity: 1;
+    background: rgba(200, 255, 200, 0.06);
+    transform: translateX(3px);
+  }
+
+  30% {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.7);
+    transform: translateX(-2px) skewX(1deg);
+  }
+
+  45% {
+    opacity: 1;
+    background: rgba(255, 200, 200, 0.04);
+    transform: translateX(1px);
+  }
+
+  60% {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.5);
+    transform: none;
+  }
+
+  80% {
+    opacity: 0.5;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: none;
+  }
 }
 
 /* ---- POWER LED ----
@@ -493,7 +578,7 @@
   transform: translateX(-50%);
   font-family: 'Press Start 2P', monospace;
   font-size: 5px;
-  color: rgba(255,255,255,0.12);
+  color: rgba(255, 255, 255, 0.12);
   letter-spacing: 5px;
   white-space: nowrap;
 }
@@ -558,7 +643,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(100,180,255,0.03) 3px, rgba(100,180,255,0.03) 5px);
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(100, 180, 255, 0.03) 3px, rgba(100, 180, 255, 0.03) 5px);
   animation: waterRipple 3s ease-in-out infinite;
 }
 
@@ -567,8 +652,8 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg,
-    transparent 0%, rgba(100,180,255,0.06) 25%, transparent 50%,
-    rgba(100,180,255,0.05) 75%, transparent 100%);
+      transparent 0%, rgba(100, 180, 255, 0.06) 25%, transparent 50%,
+      rgba(100, 180, 255, 0.05) 75%, transparent 100%);
   animation: waterShimmer 5s ease-in-out infinite alternate;
 }
 
@@ -589,6 +674,13 @@
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: var(--tw-a, 0.7); }
-  50%      { opacity: 0.1; }
+
+  0%,
+  100% {
+    opacity: var(--tw-a, 0.7);
+  }
+
+  50% {
+    opacity: 0.1;
+  }
 }
